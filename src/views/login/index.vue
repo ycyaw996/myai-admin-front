@@ -58,28 +58,28 @@ import { validUsername } from '@/utils/validate'
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
-    const validatePassword = (rule, value, callback) => {
-      if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
-      } else {
-        callback()
-      }
-    }
+    // const validateUsername = (rule, value, callback) => {
+    //   if (!validUsername(value)) {
+    //     callback(new Error('Please enter the correct user name'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
+    // const validatePassword = (rule, value, callback) => {
+    //   if (value.length < 6) {
+    //     callback(new Error('The password can not be less than 6 digits'))
+    //   } else {
+    //     callback()
+    //   }
+    // }
     return {
       loginForm: {
         username: '',
         password: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        username: [{ required: true, trigger: 'blur', }],
+        password: [{ required: true, trigger: 'blur',  }]
       },
       loading: false,
       passwordType: 'password',
@@ -109,29 +109,16 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
-          this.$store.dispatch('user/login', this.loginForm).then(response => {
-            console.log(this.$store.state.user.role);
-            console.log(this.$store.state.user.token);
-            // console.log(response); 
-            // const { role,token } = response;
-            // this.$store.commit('SET_ROLE', role);
-            // this.$store.commit('SET_TOKEN', token);
-            // console.log("Role in store:", this.$store.state.user.role);
-            // this.$router.push({ path: this.redirect || '/' });
-            // this.loading = false;
-
-          }).catch(error => {
-            console.error("Login error:", error);
+          this.$store.dispatch('user/login', this.loginForm).then(() => {
+            console.log("登录成功")
+            this.$router.push({ path:  '/' });
+            this.loading = false
+          }).catch(() => {
             this.loading = false;
-            // 添加以下行以显示错误信息
-            if (error.response && error.response.data && error.response.data.message) {
-            console.error("Error Message:", error.response.data.message);
-            }
           });
         } else {
           console.log('你小子输错了，重输！');
-          return false;
-          
+          return false;  
         }
       });
     },
