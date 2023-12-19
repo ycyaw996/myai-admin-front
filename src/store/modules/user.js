@@ -37,8 +37,7 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        console.log(response)
-        
+
         commit('SET_ROLE', response.role) // 保存 role 信息
         commit('SET_TOKEN', response.token)
         setToken(response.token)
