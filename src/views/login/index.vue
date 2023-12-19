@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">MYAI后台中心</h3>
       </div>
 
       <el-form-item prop="username">
@@ -45,7 +45,7 @@
 
       <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
-        <span> password: any</span>
+        <span> password: 123456</span>
       </div>
 
     </el-form>
@@ -74,8 +74,8 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -106,21 +106,35 @@ export default {
       })
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
+          this.loading = true;
+          this.$store.dispatch('user/login', this.loginForm).then(response => {
+            console.log(this.$store.state.user.role);
+            console.log(this.$store.state.user.token);
+            // console.log(response); 
+            // const { role,token } = response;
+            // this.$store.commit('SET_ROLE', role);
+            // this.$store.commit('SET_TOKEN', token);
+            // console.log("Role in store:", this.$store.state.user.role);
+            // this.$router.push({ path: this.redirect || '/' });
+            // this.loading = false;
+
+          }).catch(error => {
+            console.error("Login error:", error);
+            this.loading = false;
+            // 添加以下行以显示错误信息
+            if (error.response && error.response.data && error.response.data.message) {
+            console.error("Error Message:", error.response.data.message);
+            }
+          });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log('你小子输错了，重输！');
+          return false;
+          
         }
-      })
-    }
+      });
+    },
   }
 }
 </script>
