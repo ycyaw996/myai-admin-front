@@ -17,8 +17,7 @@ export function logout() {
 
 export function getInfo(token) {
   return request({
-    url: 'http://localhost:5484/api/user/info',
-    method: 'get',
-    params: { token }
+    url: 'http://localhost:5484/api/getInfo',
+    method: 'post',
   })
 }
