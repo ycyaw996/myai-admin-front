@@ -50,7 +50,6 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      console.log("执行到这里了吗3")
       getInfo(state.token).then(response => {
         // const { data } = response
 
@@ -71,7 +70,6 @@ const actions = {
 
   // user logout
   logout({ commit, state }) {
-    console.log("执行到这里了吗2")
     return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
         removeToken() // must remove  token  first
@@ -86,7 +84,6 @@ const actions = {
 
   // remove token
   resetToken({ commit }) {
-    console.log("执行到这里了吗")
     return new Promise(resolve => {
       removeToken() // must remove  token  first
       commit('RESET_STATE')

@@ -28,7 +28,6 @@ router.beforeEach(async(to, from, next) => {
     }else {
       // const hasGetUserInfo = store.getters.name
       const hasGetUserInfo = store.getters.token
-      console.log(store)
       if (hasGetUserInfo) {
         next()
       } else {
