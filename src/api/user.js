@@ -14,3 +14,11 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function getInfo(token) {
+  return request({
+    url: 'http://localhost:5484/api/user/info',
+    method: 'get',
+    params: { token }
+  })
+}
