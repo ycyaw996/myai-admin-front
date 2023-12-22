@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <!-- <div class="dashboard-container">
     <center><h1>MYAI 状态概览</h1></center>
     <div class="card1">
       <div class="dashboard-row">
@@ -56,15 +56,68 @@
         </div>
       </div>
     </div>
-    <!-- <div class="card2">
-      <ul>
-        <li>1</li>
-      </ul>
-    </div> -->
-  </div>
+  </div> -->
+<div class="cont">
+  <el-row :gutter="20">
+  <el-col :span="13">
+    <div class="grid-content dashboard">
+      <div>
+        <h4>CPU</h4>
+        <el-progress type="circle" :percentage="0"></el-progress>
+      </div>
+      <div>
+        <h4>内存</h4>
+        <el-progress type="circle" :percentage="25"></el-progress>
+      </div>
+      <div>
+        <h4>磁盘</h4>
+        <el-progress type="circle" :percentage="100" status="success"></el-progress>
+      </div>
+    </div>
+  </el-col>
+  <el-col :span="3">
+    <div class="network">
+        <h4>上传</h4>
+        <el-progress :percentage="100" status="success"></el-progress>
+        <h4>下载</h4>
+        <el-progress :percentage="100" status="warning"></el-progress>
+      </div>
+  </el-col>
+  <el-col :span="8">
+    <div class="grid-content">
+      <el-card class="box-card">
+        <div v-for="o in 4" :key="o" class="text item">
+          {{'列表内容 ' + o }}
+        </div>
+    </el-card>
 
+    </div>
+  </el-col>
+</el-row>
+<el-row :gutter="20">
+  <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+  <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
+  <el-col :span="8">
+    <div class="grid-content">
+      <!-- <el-calendar v-model="value">
+      </el-calendar> -->
+      <el-timeline>
+        <el-timeline-item
+          v-for="(activity, index) in activities"
+          :key="index"
+          :icon="activity.icon"
+          :type="activity.type"
+          :color="activity.color"
+          :size="activity.size"
+          :timestamp="activity.timestamp">
+          {{activity.content}}
+        </el-timeline-item>
+      </el-timeline>
+    </div>
+  </el-col>
+</el-row>
+</div>
 </template>
-
 
 <script>
 import { mapGetters } from 'vuex'
@@ -78,18 +131,41 @@ export default {
       'token',
     ])
   },
-  data() {
-    return {
-      gptData: null,
-      userInfo: null,
-    };
-  },
+
+      data() {
+        return {
+          value: new Date,
+          activities: [{
+          content: '支持使用图标',
+          timestamp: '2018-04-12 20:46',
+          size: 'large',
+          type: 'primary',
+          icon: 'el-icon-more'
+        }, {
+          content: '支持自定义颜色',
+          timestamp: '2018-04-03 20:46',
+          color: '#0bbd87'
+        }, {
+          content: '支持自定义尺寸',
+          timestamp: '2018-04-03 20:46',
+          size: 'large'
+        }, {
+          content: '默认样式的节点',
+          timestamp: '2018-04-03 20:46'
+        }],
+        gptData: null,
+        userInfo: null,
+        }
+      },
   created() {
     this.fetchGPTStatus();
     this.fetchUserInfo();
   },
   
   methods: {
+    format(percentage) {
+        return percentage === 100 ? '满' : `${percentage}%`;
+      },
     fetchGPTStatus() {
       gptstatus().then(response => {
         this.gptData = response;
@@ -109,53 +185,63 @@ export default {
 
 </script>
 
-<style lang="scss" scoped>
-// .dashboard-container {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   width: 100%;
-//   padding: 20px;
-//   box-sizing: border-box;
-//   background-color: #f5f5f5;
-//   min-height: 100vh;
-// }
-
-.card1 {
+<style>
+  .dashboard {
+    text-align: center;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    background-color: #f5f5f5;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    max-width: 660px;
-    margin: 30px auto;
+    justify-content: space-evenly;
+    padding-top: 20px;
   }
-.dashboard {
-  &-row {
-    display: flex;
+  .network {
+    padding-top: 40px;
+  }
+  .cont {
     width: 100%;
-    justify-content: space-between;
-    margin-bottom: 10px;
-
+    height: 100%;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  .el-row {
+    /* display: flex;
+    align-items: center; */
+    margin-bottom: 20px;
     &:last-child {
       margin-bottom: 0;
     }
   }
-
-  &-text {
-    background-color: white;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    flex: 1; // 每个文本框占据等量的空间
-
-    &:not(:last-child) {
-      margin-right: 10px;
-    }
+  .el-col {
+    padding-top: 20px;
+    border-radius: 4px;
   }
-}
+  .bg-purple-dark {
+    background: #99a9bf;
+  }
+  .bg-purple {
+    background: #d3dce6;
+  }
+  .bg-purple-light {
+    background: #e5e9f2;
+  }
+  .grid-content {
+    border-radius: 4px;
+    min-height: 36px;
+  }
+  .row-bg {
+    padding: 10px 0;
+    background-color: #f9fafc;
+  }
+  .text {
+    font-size: 14px;
+  }
+
+  .item {
+    padding: 18px 0;
+  }
+
+  .box-card {
+    width: 580px;
+  }
 </style>
 

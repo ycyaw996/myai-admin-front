@@ -1,42 +1,15 @@
 <template>
-  <div class="app-container">
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      element-loading-text="Loading"
-      border
-      fit
-      highlight-current-row
-    >
-      <el-table-column align="center" label="ID" width="95">
+  <div class="user-token-management">
+    <center><h1>AI用户Token管理中心</h1></center>
+    <div class="addbut">
+      <el-button type="primary" @click="handleAdd">添加</el-button>
+    </div>
+    <el-table :data="userList" stripe border style="width: 100%">
+      <el-table-column prop="usertoken" label="用户Token"></el-table-column>
+      <el-table-column label="操作" width="220">
         <template slot-scope="scope">
-          {{ scope.$index }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Title">
-        <template slot-scope="scope">
-          {{ scope.row.title }}
-        </template>
-      </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Pageviews" width="110" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.pageviews }}
-        </template>
-      </el-table-column>
-      <el-table-column class-name="status-col" label="Status" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
-        <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.display_time }}</span>
+          <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -44,36 +17,46 @@
 </template>
 
 <script>
-import { getList } from '@/api/table'
+import { getAIConfig } from '@/api/user'
 
 export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
   data() {
     return {
-      list: null,
-      listLoading: true
+      userList: []
     }
   },
   created() {
-    this.fetchData()
+    this.fetchUserList();
   },
   methods: {
-    fetchData() {
-      this.listLoading = true
-      getList().then(response => {
-        this.list = response.data.items
-        this.listLoading = false
-      })
+    fetchUserList() {
+      getAIConfig().then(response => {
+        this.userList = response.usertokens.map(token => ({ usertoken: token }));
+      }).catch(error => {
+        console.error('Error fetching user list:', error);
+      });
+    },
+    handleAdd() {
+      console.log('Add user');
+      // 实现添加用户的逻辑
+    },
+    handleEdit(row) {
+      console.log('Edit user', row);
+      // 实现编辑用户的逻辑
+    },
+    handleDelete(row) {
+      console.log('Delete user', row);
+      // 实现删除用户的逻辑
     }
   }
 }
 </script>
+
+<style scoped>
+.addbut {
+  padding-right: 80px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: row-reverse
+}
+</style>

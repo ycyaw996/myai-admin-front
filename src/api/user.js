@@ -21,3 +21,10 @@ export function getInfo(token) {
     method: 'post',
   })
 }
+
+export function getAIConfig() {
+  return request({
+    url: 'http://localhost:5484/api/getAIConfig',
+    method: 'post',
+  })
+}
