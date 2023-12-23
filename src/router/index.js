@@ -82,7 +82,7 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'index',
+        path: 'daojishi',
         name: 'Form',
         component: () => import('@/views/form/index'),
         meta: { title: '卡密兑换', icon: 'form' }
@@ -99,6 +99,19 @@ export const constantRoutes = [
       {
         path: 'https://www.hgidc.cn/',
         meta: { title: '服务器推荐', icon: 'link' }
+      }
+    ]
+  },
+
+  {
+    path: '/test',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Test',
+        component: () => import('@/views/test/index'),
+        meta: { title: '测试页面', icon: 'form' }
       }
     ]
   },

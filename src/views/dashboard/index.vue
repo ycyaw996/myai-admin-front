@@ -1,247 +1,285 @@
 <template>
-  <!-- <div class="dashboard-container">
-    <center><h1>MYAI 状态概览</h1></center>
-    <div class="card1">
-      <div class="dashboard-row">
-        <div class="dashboard-text">
-          蟑螂站点：myai.lllinux.cn
+  <div class="cont">
+    <el-row :gutter="20" style="height: 50%;">
+      <el-col :span="13">
+        <div class="grid-content dashboard">
+          <div>
+            <h4>CPU</h4>
+            <el-progress type="circle" :percentage="0" width="178" stroke-width="10"></el-progress>
+          </div>
+          <div>
+            <h4>内存</h4>
+            <el-progress type="circle" :percentage="25" width="178" stroke-width="10"></el-progress>
+          </div>
+          <div>
+            <h4>磁盘</h4>
+            <el-progress
+              type="circle"
+              :percentage="100"
+              status="success"
+              width="178"
+              stroke-width="10"
+            ></el-progress>
+          </div>
         </div>
-        <div class="dashboard-text">
-          站点IP：1.1.1.1
+      </el-col>
+      <el-col :span="3">
+        <div class="network">
+          <h4>上传</h4>
+          <el-progress :percentage="100" status="success" stroke-width="10"></el-progress>
+          <h4>下载</h4>
+          <el-progress :percentage="100" status="warning" stroke-width="10"></el-progress>
         </div>
-      </div>
+      </el-col>
+      <el-col :span="8">
+        <div class="grid-content">
+          <div class="block">
+            <el-image src="https://img.ycyaw.com/free/2023/12/23/6586c1d45aec7.png"></el-image>
+          </div>
+          <el-descriptions
+            class="margin-top"
+            :column="2"
+            size="medium"
+            border
+          >
+            <template slot="extra"> </template>
+            <el-descriptions-item>
+              <template slot="label">
+                用户名称
+              </template>
+              {{ userInfo && userInfo.username }}
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template slot="label">
+                用户属性
+              </template>
+              <span v-if="userInfo && userInfo.role === 1">超级管理员</span>
+              <span v-else-if="userInfo && userInfo.role === 2">普通使用者</span>
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template slot="label">
+                AI 属性
+              </template>
+              <div v-if="gptData && gptData.isPlus">
+              <el-tag
+                type="warning"
+                effect="dark">
+                Plus账号
+              </el-tag>
+            </div>
+            <span v-else="gptData.isPlus">普通用户</span>
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template slot="label">
+                AI 状态
+              </template>
+              <div v-if="gptData && gptData.accountReady">
+              <el-tag
+                type=success
+                effect="dark">
+                正常运行
+              </el-tag>
+            </div>
+            <span v-else="gptData.accountReady">封禁</span>
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template slot="label">
+                3h对话次数
+              </template>
+              {{ gptData && gptData.count }}次
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template slot="label">
+                3h剩余次数
+              </template>
+              {{ 40 - (gptData ? gptData.count : 0) }}次
+            </el-descriptions-item>
+          </el-descriptions>
+        </div>
+        <el-card shadow="hover" style="width: 100%;">
+          <div style="width: 100%; display: inline-block; ">
+            <el-statistic :value="deadline2" time-indices title="GPT4对话重置倒计数">
+            </el-statistic>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <el-row :gutter="20" style="height: 50%">
+      <el-col :span="16">
+        <div class="grid-content">
+          公告：
+          <el-timeline>
+            <el-timeline-item
+              timestamp="2021-05-01"
+              placement="top"
+              type="primary"
+            >
+              <el-card>
+                <h4>公告标题</h4>
+                <p style="font-size: 14px;line-height: 40px;letter-spacing: 1px;">
+ChatGPT 是 OpenAI 开发的一款先进的大型语言模型。它能够通过文本交互的方式回答问题、提供信息、辅助编程、创作文本和艺术作品、进行语言翻译等多种任务。ChatGPT 能处理多样的文本输入，包括日常对话、教育咨询、技术支持和创意写作。
+作为人工智能，ChatGPT 不具备个人情感或自我意识，而是基于大量数据和机器学习技术来生成回应。它的主要目标是提供准确、有用和有趣的信息，同时确保其回应符合道德和使用指导原则。ChatGPT 持续通过学习和更新来提升其服务质量和用户体验。
+</p>
+              </el-card>
+            </el-timeline-item>
+          </el-timeline>
+        </div>
+      </el-col>
 
-      <div class="dashboard-row">
-        <div class="dashboard-text">
-          用户数量：4
+      <el-col :span="8" class="erweima">
+        <div>
+          <el-image
+            style="width: 200px; height: 200px"
+            :src="url"
+            :preview-src-list="srcList"
+          >
+          </el-image>
+          <center><h4>群聊</h4></center>
         </div>
-        <div class="dashboard-text">
-          站点存活：是
+        <div>
+          <el-image
+            style="width: 200px; height: 200px"
+            :src="url"
+            :preview-src-list="srcList"
+          >
+          </el-image>
+          <center><h4>客服</h4></center>
         </div>
-      </div>
-
-      <div class="dashboard-row">
-        <div class="dashboard-text">
-          用户名称：{{ userInfo && userInfo.username }}
-        </div>
-        <div class="dashboard-text">
-          用户属性：
-          <span v-if="userInfo && userInfo.role === 1">超级管理员</span>
-          <span v-else-if="userInfo && userInfo.role === 2">普通使用者</span>
-        </div>
-      </div>
-
-      <div class="dashboard-row">
-        <div class="dashboard-text">
-          AI 属性：
-          <span v-if="gptData && gptData.isPlus">Plus账户</span>
-          <span v-else="gptData.isPlus">普通用户</span>
-        </div>
-        <div class="dashboard-text">
-          AI 状态：
-          <span v-if="gptData && gptData.accountReady">正常</span>
-          <span v-else="gptData.accountReady">封禁</span>
-        </div>
-      </div>
-
-      <div class="dashboard-row" style="justify-content: space-between;">
-        <div class="dashboard-text" style="flex: 1;">
-          3小时对话次数：{{ gptData && gptData.count }}次
-        </div>
-        <div class="dashboard-text" style="flex: 1;">
-          剩余次数：{{ 40 - (gptData ? gptData.count : 0) }}次
-        </div>
-        <div class="dashboard-text" style="flex: 1;">
-          重置次数倒计时：{{ gptData && gptData.clears_in }}秒
-        </div>
-      </div>
-    </div>
-  </div> -->
-<div class="cont">
-  <el-row :gutter="20">
-  <el-col :span="13">
-    <div class="grid-content dashboard">
-      <div>
-        <h4>CPU</h4>
-        <el-progress type="circle" :percentage="0"></el-progress>
-      </div>
-      <div>
-        <h4>内存</h4>
-        <el-progress type="circle" :percentage="25"></el-progress>
-      </div>
-      <div>
-        <h4>磁盘</h4>
-        <el-progress type="circle" :percentage="100" status="success"></el-progress>
-      </div>
-    </div>
-  </el-col>
-  <el-col :span="3">
-    <div class="network">
-        <h4>上传</h4>
-        <el-progress :percentage="100" status="success"></el-progress>
-        <h4>下载</h4>
-        <el-progress :percentage="100" status="warning"></el-progress>
-      </div>
-  </el-col>
-  <el-col :span="8">
-    <div class="grid-content">
-      <el-card class="box-card">
-        <div v-for="o in 4" :key="o" class="text item">
-          {{'列表内容 ' + o }}
-        </div>
-    </el-card>
-
-    </div>
-  </el-col>
-</el-row>
-<el-row :gutter="20">
-  <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
-  <el-col :span="8"><div class="grid-content bg-purple"></div></el-col>
-  <el-col :span="8">
-    <div class="grid-content">
-      <!-- <el-calendar v-model="value">
-      </el-calendar> -->
-      <el-timeline>
-        <el-timeline-item
-          v-for="(activity, index) in activities"
-          :key="index"
-          :icon="activity.icon"
-          :type="activity.type"
-          :color="activity.color"
-          :size="activity.size"
-          :timestamp="activity.timestamp">
-          {{activity.content}}
-        </el-timeline-item>
-      </el-timeline>
-    </div>
-  </el-col>
-</el-row>
-</div>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { gptstatus } from '@/api/gpt'
-import { getInfo }  from '@/api/user';
+import { mapGetters } from "vuex";
+import { gptstatus } from "@/api/gpt";
+import { getInfo } from "@/api/user";
 
 export default {
-  name: 'Dashboard',
+  name: "Dashboard",
   computed: {
-    ...mapGetters([
-      'token',
-    ])
+    ...mapGetters(["token"]),
   },
-
-      data() {
-        return {
-          value: new Date,
-          activities: [{
-          content: '支持使用图标',
-          timestamp: '2018-04-12 20:46',
-          size: 'large',
-          type: 'primary',
-          icon: 'el-icon-more'
-        }, {
-          content: '支持自定义颜色',
-          timestamp: '2018-04-03 20:46',
-          color: '#0bbd87'
-        }, {
-          content: '支持自定义尺寸',
-          timestamp: '2018-04-03 20:46',
-          size: 'large'
-        }, {
-          content: '默认样式的节点',
-          timestamp: '2018-04-03 20:46'
-        }],
-        gptData: null,
-        userInfo: null,
-        }
-      },
+  data() {
+    return {
+      items: [
+        { type: "success", label: "正常" },
+        { type: "warning", label: "PLUS" },
+      ],
+      url: "https://img.ycyaw.com/free/2023/12/23/65866eaf23792.png",
+      srcList: ["https://img.ycyaw.com/free/2023/12/23/65866eaf23792.png"],
+      value: new Date(),
+      deadline2: Date.now() + 1000 * 60 * 60 * 8,
+      gptData: null,
+      userInfo: null,
+    };
+  },
   created() {
     this.fetchGPTStatus();
     this.fetchUserInfo();
   },
-  
+
   methods: {
     format(percentage) {
-        return percentage === 100 ? '满' : `${percentage}%`;
-      },
+      return percentage === 100 ? "满" : `${percentage}%`;
+    },
     fetchGPTStatus() {
-      gptstatus().then(response => {
-        this.gptData = response;
-      }).catch(error => {
-        console.error('Error fetching GPT status:', error);
-      });
+      gptstatus()
+        .then((response) => {
+          this.gptData = response;
+        })
+        .catch((error) => {
+          console.error("Error fetching GPT status:", error);
+        });
     },
     fetchUserInfo() {
-      getInfo(this.token).then(response => {
-        this.userInfo = response.data;
-      }).catch(error => {
-        console.error('Error fetching user info:', error);
+      getInfo(this.token)
+        .then((response) => {
+          this.userInfo = response.data;
+        })
+        .catch((error) => {
+          console.error("Error fetching user info:", error);
+        });
+    },
+    hilarity() {
+      this.$notify({
+        title: "提示",
+        message: "时间已到",
+        duration: 0,
       });
     },
-  }
-}
-
+    clickFn() {
+      this.$refs.statistic.suspend(this.stop);
+      this.stop = !this.stop;
+    },
+    add() {
+      this.deadline3 = this.deadline3 + 1000 * 10;
+    },
+  },
+};
 </script>
 
 <style>
-  .dashboard {
-    text-align: center;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-    padding-top: 20px;
-  }
-  .network {
-    padding-top: 40px;
-  }
-  .cont {
-    width: 100%;
-    height: 100%;
-    margin-left: 20px;
-    margin-right: 20px;
-  }
-  .el-row {
-    /* display: flex;
+.erweima {
+  padding-top: 60px;
+  display: flex;
+  justify-content: space-around;
+}
+.dashboard {
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-top: 80px;
+}
+.network {
+  padding-top: 120px;
+}
+.cont {
+  width: 100%;
+  height: 90vh;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+.el-row {
+  /* display: flex;
     align-items: center; */
-    margin-bottom: 20px;
-    &:last-child {
-      margin-bottom: 0;
-    }
+  margin-bottom: 20px;
+  &:last-child {
+    margin-bottom: 0;
   }
-  .el-col {
-    padding-top: 20px;
-    border-radius: 4px;
-  }
-  .bg-purple-dark {
-    background: #99a9bf;
-  }
-  .bg-purple {
-    background: #d3dce6;
-  }
-  .bg-purple-light {
-    background: #e5e9f2;
-  }
-  .grid-content {
-    border-radius: 4px;
-    min-height: 36px;
-  }
-  .row-bg {
-    padding: 10px 0;
-    background-color: #f9fafc;
-  }
-  .text {
-    font-size: 14px;
-  }
+}
+.el-col {
+  border-radius: 4px;
+}
+.bg-purple-dark {
+  background: #99a9bf;
+}
+.bg-purple {
+  background: #d3dce6;
+}
+.bg-purple-light {
+  background: #e5e9f2;
+}
+.grid-content {
+  margin-right: 30px;
+  border-radius: 4px;
+  min-height: 36px;
+}
+.row-bg {
+}
+.text {
+  font-size: 14px;
+}
 
-  .item {
-    padding: 18px 0;
-  }
+.item {
+  padding: 18px 0;
+}
 
-  .box-card {
-    width: 580px;
-  }
+.box-card {
+  width: 580px;
+}
+.rili {
+}
 </style>
-
